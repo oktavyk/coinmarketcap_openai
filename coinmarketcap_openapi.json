@@ -1,0 +1,71 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "CoinMarketCap API",
+      "version": "1.0.0",
+      "description": "API для работы с данными о криптовалютах"
+    },
+    "servers": [
+      {
+        "url": "https://pro-api.coinmarketcap.com/v1"
+      }
+    ],
+    "paths": {
+      "/cryptocurrency/listings/latest": {
+        "get": {
+          "summary": "Получить последние данные о криптовалютах",
+          "parameters": [
+            {
+              "name": "start",
+              "in": "query",
+              "description": "Начальная позиция выборки",
+              "required": false,
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Количество возвращаемых записей",
+              "required": false,
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "convert",
+              "in": "query",
+              "description": "Целевая валюта для конвертации (например, USD)",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Успешный ответ",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "ApiKeyAuth": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "X-CMC_PRO_API_KEY"
+        }
+      }
+    },
+    "security": [
+      {
+        "ApiKeyAuth": []
+      }
+    ]
+  }
