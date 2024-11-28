@@ -146,5 +146,34 @@
                       "example": 10723456789
                     },
                     "last_updated": {
-                      "type"
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ErrorResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "object",
+              "properties": {
+                "error_code": {
+                  "type": "integer",
+                  "example": 1002
+                },
+                "error_message": {
+                  "type": "string",
+                  "example": "Invalid API Key"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   
