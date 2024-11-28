@@ -1,224 +1,71 @@
-{
+import requests
+import json
+
+# Сохраните OpenAPI описание в JSON файле или подключите его как словарь
+openapi_spec = {
     "openapi": "3.1.0",
     "info": {
-      "title": "CoinMarketCap API",
-      "description": "API для получения информации о криптовалютах, включая рыночные данные и котировки.",
-      "version": "1.0.0"
+        "title": "CoinMarketCap API",
+        "description": "API для получения информации о криптовалютах, включая рыночные данные и котировки.",
+        "version": "1.0.0"
     },
     "servers": [
-      {
-        "url": "https://pro-api.coinmarketcap.com/v1",
-        "description": "Основной сервер CoinMarketCap API"
-      }
+        {
+            "url": "https://pro-api.coinmarketcap.com/v1",
+            "description": "Основной сервер CoinMarketCap API"
+        }
     ],
     "paths": {
-      "/cryptocurrency/listings/latest": {
-        "get": {
-          "operationId": "getLatestCryptocurrencyListings",
-          "summary": "Получение списка последних криптовалют.",
-          "description": "Возвращает актуальные рыночные данные для криптовалют.",
-          "parameters": [
-            {
-              "name": "start",
-              "in": "query",
-              "description": "Начальный ранг (1-базовый) для результатов.",
-              "required": false,
-              "schema": {
-                "type": "integer",
-                "example": 1
-              }
-            },
-            {
-              "name": "limit",
-              "in": "query",
-              "description": "Количество возвращаемых результатов.",
-              "required": false,
-              "schema": {
-                "type": "integer",
-                "example": 10
-              }
-            },
-            {
-              "name": "convert",
-              "in": "query",
-              "description": "Валюта для конвертации значений (например, USD).",
-              "required": false,
-              "schema": {
-                "type": "string",
-                "example": "USD"
-              }
+        "/cryptocurrency/listings/latest": {
+            "get": {
+                "operationId": "getLatestCryptocurrencyListings",
+                "summary": "Получение списка последних криптовалют.",
+                "parameters": [
+                    {"name": "start", "in": "query", "schema": {"type": "integer", "example": 1}},
+                    {"name": "limit", "in": "query", "schema": {"type": "integer", "example": 10}},
+                    {"name": "convert", "in": "query", "schema": {"type": "string", "example": "USD"}}
+                ]
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Список криптовалют с рыночными данными.",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/CryptocurrencyListResponse"
-                  },
-                  "examples": {
-                    "success": {
-                      "value": {
-                        "status": {
-                          "timestamp": "2024-11-28T00:00:00Z",
-                          "error_code": 0,
-                          "error_message": null
-                        },
-                        "data": [
-                          {
-                            "id": 1,
-                            "name": "Bitcoin",
-                            "symbol": "BTC",
-                            "quote": {
-                              "USD": {
-                                "price": 57345.67,
-                                "market_cap": 10723456789,
-                                "last_updated": "2024-11-28T00:00:00Z"
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Некорректный запрос (например, отсутствуют обязательные параметры).",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Неавторизованный запрос, отсутствует или неверный API-ключ.",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
-            },
-            "429": {
-              "description": "Превышен лимит запросов API.",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
-            }
-          },
-          "security": [
-            {
-              "apiKeyAuth": []
-            }
-          ]
         }
-      }
     },
     "components": {
-      "securitySchemes": {
-        "apiKeyAuth": {
-          "type": "apiKey",
-          "in": "header",
-          "name": "X-CMC_PRO_API_KEY"
+        "securitySchemes": {
+            "apiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-CMC_PRO_API_KEY"
+            }
         }
-      },
-      "schemas": {
-        "CryptocurrencyListResponse": {
-          "type": "object",
-          "properties": {
-            "status": {
-              "type": "object",
-              "properties": {
-                "timestamp": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "error_code": {
-                  "type": "integer"
-                },
-                "error_message": {
-                  "type": "string",
-                  "nullable": true
-                }
-              }
-            },
-            "data": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Cryptocurrency"
-              }
-            }
-          }
-        },
-        "Cryptocurrency": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "example": 1
-            },
-            "name": {
-              "type": "string",
-              "example": "Bitcoin"
-            },
-            "symbol": {
-              "type": "string",
-              "example": "BTC"
-            },
-            "quote": {
-              "type": "object",
-              "properties": {
-                "USD": {
-                  "type": "object",
-                  "properties": {
-                    "price": {
-                      "type": "number",
-                      "format": "float",
-                      "example": 57345.67
-                    },
-                    "market_cap": {
-                      "type": "number",
-                      "example": 10723456789
-                    },
-                    "last_updated": {
-                      "type": "string",
-                      "format": "date-time"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "ErrorResponse": {
-          "type": "object",
-          "properties": {
-            "status": {
-              "type": "object",
-              "properties": {
-                "error_code": {
-                  "type": "integer",
-                  "example": 1002
-                },
-                "error_message": {
-                  "type": "string",
-                  "example": "Invalid API Key"
-                }
-              }
-            }
-          }
-        }
-      }
     }
-  }
-  
+}
+
+# Извлечение URL из OpenAPI описания
+base_url = openapi_spec["servers"][0]["url"]
+endpoint = "/cryptocurrency/listings/latest"
+full_url = f"{base_url}{endpoint}"
+
+# Параметры для запроса
+params = {
+    "start": 1,
+    "limit": 10,
+    "convert": "USD"
+}
+
+# Заголовки
+headers = {
+    "X-CMC_PRO_API_KEY": "125ec6dc-759b-463a-ba53-16801acb9f6aI_КЛЮЧ",  # Замените на ваш API-ключ
+    "Content-Type": "application/json"
+}
+
+# Выполнение GET-запроса
+try:
+    response = requests.get(full_url, headers=headers, params=params)
+    response.raise_for_status()  # Проверка на ошибки HTTP
+    data = response.json()  # Преобразование ответа в JSON
+
+    # Печать результата
+    print(json.dumps(data, indent=4, ensure_ascii=False))  # Удобный формат вывода
+except requests.exceptions.HTTPError as http_err:
+    print(f"HTTP ошибка: {http_err}")
+except Exception as err:
+    print(f"Другая ошибка: {err}")
