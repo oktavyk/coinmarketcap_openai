@@ -1,128 +1,109 @@
-{
-    "openapi": "3.1.0",
-    "info": {
-      "title": "CoinMarketCap API",
-      "version": "1.0.0",
-      "description": "API для работы с данными о криптовалютах"
-    },
-    "servers": [
-      {
-        "url": "https://pro-api.coinmarketcap.com/v1"
-      }
-    ],
-    "paths": {
-      "/cryptocurrency/listings/latest": {
-        "get": {
-          "summary": "Получить последние данные о криптовалютах",
-          "operationId": "getLatestCryptocurrencyListings", 
-          "parameters": [
-            {
-              "name": "start",
-              "in": "query",
-              "description": "Начальная позиция выборки",
-              "required": false,
-              "schema": {
-                "type": "integer"
-              }
-            },
-            {
-              "name": "limit",
-              "in": "query",
-              "description": "Количество возвращаемых записей",
-              "required": false,
-              "schema": {
-                "type": "integer"
-              }
-            },
-            {
-              "name": "convert",
-              "in": "query",
-              "description": "Валюта, в которую будут конвертированы данные",
-              "required": false,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Успешный ответ",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/CryptoListingResponse"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Некорректный запрос"
-            },
-            "401": {
-              "description": "Неверный или отсутствующий API-ключ"
-            },
-            "429": {
-              "description": "Превышение лимита запросов"
-            }
-          },
-          "security": [
-            {
-              "ApiKeyAuth": []
-            }
-          ]
-        }
-      }
-    },
-    "components": {
-      "securitySchemes": {
-        "ApiKeyAuth": {
-          "type": "apiKey",
-          "in": "header",
-          "name": "X-CMC_PRO_API_KEY"
-        }
-      },
-      "schemas": {
-        "CryptoListingResponse": {
-          "type": "object",
-          "properties": {
-            "status": {
-              "type": "object",
-              "properties": {
-                "timestamp": { "type": "string" },
-                "error_code": { "type": "integer" },
-                "error_message": { "type": ["string", "null"] },
-                "elapsed": { "type": "integer" },
-                "credit_count": { "type": "integer" }
-              }
-            },
-            "data": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": { "type": "integer" },
-                  "name": { "type": "string" },
-                  "symbol": { "type": "string" },
-                  "slug": { "type": "string" },
-                  "cmc_rank": { "type": "integer" },
-                  "last_updated": { "type": "string" },
-                  "quote": {
-                    "type": "object",
-                    "properties": {
-                      "price": { "type": "number" },
-                      "volume_24h": { "type": "number" },
-                      "percent_change_1h": { "type": "number" },
-                      "percent_change_24h": { "type": "number" },
-                      "market_cap": { "type": "number" },
-                      "last_updated": { "type": "string" }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  
+openapi: 3.1.0
+info:
+  title: CoinMarketCap API
+  description: API для получения информации о криптовалютах, включая рыночные данные и котировки.
+  version: 1.0.0
+servers:
+  - url: https://pro-api.coinmarketcap.com/v1
+    description: Основной сервер CoinMarketCap API
+paths:
+  /cryptocurrency/listings/latest:
+    get:
+      operationId: getLatestCryptocurrencyListings
+      summary: Получение списка последних криптовалют.
+      description: Возвращает актуальные рыночные данные для криптовалют.
+      parameters:
+        - name: start
+          in: query
+          description: Начальный ранг (1-базовый) для результатов.
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          description: Количество возвращаемых результатов.
+          required: false
+          schema:
+            type: integer
+            example: 10
+        - name: convert
+          in: query
+          description: Валюта для конвертации значений (например, USD).
+          required: false
+          schema:
+            type: string
+            example: USD
+      responses:
+        '200':
+          description: Список криптовалют с рыночными данными.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      timestamp:
+                        type: string
+                        format: date-time
+                      error_code:
+                        type: integer
+                      error_message:
+                        type: string
+                        nullable: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: Bitcoin
+                        symbol:
+                          type: string
+                          example: BTC
+                        quote:
+                          type: object
+                          properties:
+                            USD:
+                              type: object
+                              properties:
+                                price:
+                                  type: number
+                                  format: float
+                                  example: 57345.67
+                                market_cap:
+                                  type: number
+                                  example: 10723456789
+                                last_updated:
+                                  type: string
+                                  format: date-time
+        '401':
+          description: Неавторизованный запрос, отсутствует или неверный API-ключ.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      error_code:
+                        type: integer
+                        example: 1002
+                      error_message:
+                        type: string
+                        example: "Invalid API Key"
+      security:
+        - apiKeyAuth: []
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-CMC_PRO_API_KEY
