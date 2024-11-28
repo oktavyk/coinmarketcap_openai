@@ -14,7 +14,7 @@
       "/cryptocurrency/listings/latest": {
         "get": {
           "summary": "Получить последние данные о криптовалютах",
-          "operationId": "getLatestCryptocurrencyListings",
+          "operationId": "getLatestCryptocurrencyListings", 
           "parameters": [
             {
               "name": "start",
