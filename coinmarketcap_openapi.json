@@ -55,68 +55,7 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "object",
-                        "properties": {
-                          "timestamp": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "error_code": {
-                            "type": "integer"
-                          },
-                          "error_message": {
-                            "type": "string",
-                            "nullable": true
-                          }
-                        }
-                      },
-                      "data": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "example": 1
-                            },
-                            "name": {
-                              "type": "string",
-                              "example": "Bitcoin"
-                            },
-                            "symbol": {
-                              "type": "string",
-                              "example": "BTC"
-                            },
-                            "quote": {
-                              "type": "object",
-                              "properties": {
-                                "USD": {
-                                  "type": "object",
-                                  "properties": {
-                                    "price": {
-                                      "type": "number",
-                                      "format": "float",
-                                      "example": 57345.67
-                                    },
-                                    "market_cap": {
-                                      "type": "number",
-                                      "example": 10723456789
-                                    },
-                                    "last_updated": {
-                                      "type": "string",
-                                      "format": "date-time"
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
+                    "$ref": "#/components/schemas/CryptocurrencyListResponse"
                   }
                 }
               }
@@ -126,22 +65,7 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "object",
-                        "properties": {
-                          "error_code": {
-                            "type": "integer",
-                            "example": 1002
-                          },
-                          "error_message": {
-                            "type": "string",
-                            "example": "Invalid API Key"
-                          }
-                        }
-                      }
-                    }
+                    "$ref": "#/components/schemas/ErrorResponse"
                   }
                 }
               }
@@ -162,7 +86,65 @@
           "in": "header",
           "name": "X-CMC_PRO_API_KEY"
         }
-      }
-    }
-  }
+      },
+      "schemas": {
+        "CryptocurrencyListResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "object",
+              "properties": {
+                "timestamp": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "error_code": {
+                  "type": "integer"
+                },
+                "error_message": {
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Cryptocurrency"
+              }
+            }
+          }
+        },
+        "Cryptocurrency": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "example": "Bitcoin"
+            },
+            "symbol": {
+              "type": "string",
+              "example": "BTC"
+            },
+            "quote": {
+              "type": "object",
+              "properties": {
+                "USD": {
+                  "type": "object",
+                  "properties": {
+                    "price": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 57345.67
+                    },
+                    "market_cap": {
+                      "type": "number",
+                      "example": 10723456789
+                    },
+                    "last_updated": {
+                      "type"
   
