@@ -14,20 +14,34 @@
       "/cryptocurrency/listings/latest": {
         "get": {
           "summary": "Получить последние данные о криптовалютах",
+          "operationId": "getLatestCryptocurrencyListings",
           "parameters": [
             {
               "name": "start",
               "in": "query",
               "description": "Начальная позиция выборки",
               "required": false,
-              "schema": { "type": "integer" }
+              "schema": {
+                "type": "integer"
+              }
             },
             {
               "name": "limit",
               "in": "query",
               "description": "Количество возвращаемых записей",
               "required": false,
-              "schema": { "type": "integer" }
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "convert",
+              "in": "query",
+              "description": "Валюта, в которую будут конвертированы данные",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
             }
           ],
           "responses": {
@@ -40,6 +54,15 @@
                   }
                 }
               }
+            },
+            "400": {
+              "description": "Некорректный запрос"
+            },
+            "401": {
+              "description": "Неверный или отсутствующий API-ключ"
+            },
+            "429": {
+              "description": "Превышение лимита запросов"
             }
           },
           "security": [
@@ -51,6 +74,13 @@
       }
     },
     "components": {
+      "securitySchemes": {
+        "ApiKeyAuth": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "X-CMC_PRO_API_KEY"
+        }
+      },
       "schemas": {
         "CryptoListingResponse": {
           "type": "object",
@@ -58,7 +88,7 @@
             "status": {
               "type": "object",
               "properties": {
-                "timestamp": { "type": "string", "format": "date-time" },
+                "timestamp": { "type": "string" },
                 "error_code": { "type": "integer" },
                 "error_message": { "type": ["string", "null"] },
                 "elapsed": { "type": "integer" },
@@ -74,25 +104,23 @@
                   "name": { "type": "string" },
                   "symbol": { "type": "string" },
                   "slug": { "type": "string" },
+                  "cmc_rank": { "type": "integer" },
+                  "last_updated": { "type": "string" },
                   "quote": {
                     "type": "object",
                     "properties": {
                       "price": { "type": "number" },
                       "volume_24h": { "type": "number" },
-                      "percent_change_1h": { "type": "number" }
+                      "percent_change_1h": { "type": "number" },
+                      "percent_change_24h": { "type": "number" },
+                      "market_cap": { "type": "number" },
+                      "last_updated": { "type": "string" }
                     }
                   }
                 }
               }
             }
           }
-        }
-      },
-      "securitySchemes": {
-        "ApiKeyAuth": {
-          "type": "apiKey",
-          "in": "header",
-          "name": "X-CMC_PRO_API_KEY"
         }
       }
     }
