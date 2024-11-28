@@ -13,7 +13,6 @@
     "paths": {
       "/cryptocurrency/listings/latest": {
         "get": {
-          "operationId": "getLatestListings",
           "summary": "Получить последние данные о криптовалютах",
           "parameters": [
             {
@@ -21,27 +20,14 @@
               "in": "query",
               "description": "Начальная позиция выборки",
               "required": false,
-              "schema": {
-                "type": "integer"
-              }
+              "schema": { "type": "integer" }
             },
             {
               "name": "limit",
               "in": "query",
               "description": "Количество возвращаемых записей",
               "required": false,
-              "schema": {
-                "type": "integer"
-              }
-            },
-            {
-              "name": "convert",
-              "in": "query",
-              "description": "Валюта для конвертации",
-              "required": false,
-              "schema": {
-                "type": "string"
-              }
+              "schema": { "type": "integer" }
             }
           ],
           "responses": {
@@ -50,16 +36,58 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "type": "object"
+                    "$ref": "#/components/schemas/CryptoListingResponse"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "CryptoListingResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "object",
+              "properties": {
+                "timestamp": { "type": "string", "format": "date-time" },
+                "error_code": { "type": "integer" },
+                "error_message": { "type": ["string", "null"] },
+                "elapsed": { "type": "integer" },
+                "credit_count": { "type": "integer" }
+              }
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "integer" },
+                  "name": { "type": "string" },
+                  "symbol": { "type": "string" },
+                  "slug": { "type": "string" },
+                  "quote": {
+                    "type": "object",
+                    "properties": {
+                      "price": { "type": "number" },
+                      "volume_24h": { "type": "number" },
+                      "percent_change_1h": { "type": "number" }
+                    }
                   }
                 }
               }
             }
           }
         }
-      }
-    },
-    "components": {
+      },
       "securitySchemes": {
         "ApiKeyAuth": {
           "type": "apiKey",
@@ -67,10 +95,6 @@
           "name": "X-CMC_PRO_API_KEY"
         }
       }
-    },
-    "security": [
-      {
-        "ApiKeyAuth": []
-      }
-    ]
+    }
   }
+  
