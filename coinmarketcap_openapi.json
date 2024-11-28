@@ -56,12 +56,57 @@
                 "application/json": {
                   "schema": {
                     "$ref": "#/components/schemas/CryptocurrencyListResponse"
+                  },
+                  "examples": {
+                    "success": {
+                      "value": {
+                        "status": {
+                          "timestamp": "2024-11-28T00:00:00Z",
+                          "error_code": 0,
+                          "error_message": null
+                        },
+                        "data": [
+                          {
+                            "id": 1,
+                            "name": "Bitcoin",
+                            "symbol": "BTC",
+                            "quote": {
+                              "USD": {
+                                "price": 57345.67,
+                                "market_cap": 10723456789,
+                                "last_updated": "2024-11-28T00:00:00Z"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Некорректный запрос (например, отсутствуют обязательные параметры).",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
                   }
                 }
               }
             },
             "401": {
               "description": "Неавторизованный запрос, отсутствует или неверный API-ключ.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            },
+            "429": {
+              "description": "Превышен лимит запросов API.",
               "content": {
                 "application/json": {
                   "schema": {
