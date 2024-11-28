@@ -1,5 +1,5 @@
 {
-    "openapi": "3.0.0",
+    "openapi": "3.1.0",
     "info": {
       "title": "CoinMarketCap API",
       "version": "1.0.0",
@@ -13,6 +13,7 @@
     "paths": {
       "/cryptocurrency/listings/latest": {
         "get": {
+          "operationId": "getLatestListings",
           "summary": "Получить последние данные о криптовалютах",
           "parameters": [
             {
@@ -36,8 +37,8 @@
             {
               "name": "convert",
               "in": "query",
-              "description": "Целевая валюта для конвертации (например, USD)",
-              "required": true,
+              "description": "Валюта для конвертации",
+              "required": false,
               "schema": {
                 "type": "string"
               }
@@ -47,7 +48,11 @@
             "200": {
               "description": "Успешный ответ",
               "content": {
-                "application/json": {}
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
               }
             }
           }
